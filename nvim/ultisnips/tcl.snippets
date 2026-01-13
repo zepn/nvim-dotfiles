@@ -31,6 +31,123 @@ snip.rv = format_comment(t[1])
 $0
 endsnippet
 
+snippet __comment_compile=
+#!/bin/tclsh
+#==
+#   NOTE      - `!v expand('%:t')`
+#   Author    - ${1:Aru}
+#
+#   Created   - `date +%Y.%m.%d`
+`!p
+def format_comment(path):
+  front = "#   "
+  if path.startswith("Chae"):
+    retval = front + "Website   - http://www.solidwintech.co.kr\n" + \
+             front + "Contact   - chaelj@solidwt.co.kr"
+  else:
+    retval = front + "Github    - https://github.com/aruyu\n" + \
+             front + "Contact   - vine9151@gmail.com"
+  return retval
+
+snip.rv = format_comment(t[1])
+`
+#/
+
+
+
+#==
+#   1. Set variables
+#/
+set src_directory "../../SRCS"
+set hdl_directory "${src_directory}/hdl/${2}"
+set tb_directory "${src_directory}/tb/$2"
+
+set hdl_files {
+  ${3}
+}
+set tb_file ${4}
+
+
+#==
+#   2. Compile HDLs
+#/
+foreach hdl_file ${hdl_files} {
+  puts "Compiling file: ${hdl_file}"
+
+  if { [string match "*.vhdl" ${hdl_file}] } {
+    # Case for VHDL.
+    vcom -quiet -93 -work work ${hdl_directory}/${hdl_file}
+  } elseif { [string match "*.v" ${hdl_file}] || [string match "*.sv" ${hdl_file}] } {
+    # Case for Verilog/SystemVerilog.
+    vlog -quiet -work work ${hdl_directory}/${hdl_file}
+  } else {
+    # Other cases.
+    puts "Warning: Unknown file type for ${hdl_file}"
+  }
+}
+
+
+#==
+#   3. Compile Testbench
+#/
+if { [string match "*.vhdl" ${tb_file}] } {
+  # Case for VHDL.
+  vcom -quiet -2008 -work work ${tb_directory}/${tb_file}
+} elseif { [string match "*.v" ${tb_file}] || [string match "*.sv" ${tb_file}] } {
+  # Case for Verilog/SystemVerilog.
+  vlog -quiet -work work ${tb_directory}/${tb_file}
+} else {
+  # Other cases.
+  puts "Warning: Unknown file type for ${tb_file}"
+}
+$0
+endsnippet
+
+snippet __comment_run=
+#!/bin/tclsh
+#==
+#   NOTE      - `!v expand('%:t')`
+#   Author    - ${1:Aru}
+#
+#   Created   - `date +%Y.%m.%d`
+`!p
+def format_comment(path):
+  front = "#   "
+  if path.startswith("Chae"):
+    retval = front + "Website   - http://www.solidwintech.co.kr\n" + \
+             front + "Contact   - chaelj@solidwt.co.kr"
+  else:
+    retval = front + "Github    - https://github.com/aruyu\n" + \
+             front + "Contact   - vine9151@gmail.com"
+  return retval
+
+snip.rv = format_comment(t[1])
+`
+#/
+
+
+
+#==
+#   1. Set variables
+#/
+set tb_module ${2}
+
+
+#==
+#   2. Simulation & Create wave
+#/
+vsim work.${tb_module}
+write format wave -window .main_pane.wave.interior.cs.body.pw.wf ./wave.do
+
+
+#==
+#   3. Run it
+#/
+do wave.do
+run 400ms
+$0
+endsnippet
+
 snippet if "if operator" b
 if {${1}} {
   $0
