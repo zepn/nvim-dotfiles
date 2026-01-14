@@ -1,5 +1,11 @@
 snippet ;;=
 ; ===========
+;  $0
+; ===========
+endsnippet
+
+snippet ;;date=
+; ===========
 ;  @${1:brief} $0
 ;  [C; `date +%Y.%m.%d`, M;]
 ; ===========
@@ -29,4 +35,8 @@ snip.rv = format_comment(t[1])
 
 
 $0
+endsnippet
+
+snippet "([\S]+(\-[\S]+)+)" "kebab-case to snake_case" r
+`!p snip.rv = re.sub('-','_', match.group(1))`$0
 endsnippet
