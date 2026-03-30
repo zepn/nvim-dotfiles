@@ -28,15 +28,28 @@ function _G.sync_to()
   vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
 end
 
-function _G.open_latex_zathura()
-  do_autostarts()
-
+function _G.load_latex()
   local filetype = vim.api.nvim_eval('&filetype')
   local filename = vim.fn.expand('%:t'):sub(0, -5)
 
   if filetype == 'tex' then
+    do_autostarts()
     vim.cmd('!zathura --fork --mode fullscreen ' .. filename .. '.pdf')
     vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
+  else
+    print('This command is for loading LaTeX with Zathura.')
+  end
+end
+
+function _G.clean_latex()
+  local filetype = vim.api.nvim_eval('&filetype')
+  local filename = vim.fn.expand('%:t'):sub(0, -5)
+
+  if filetype == 'tex' then
+    vim.cmd('!latexmk -c ' .. filename .. '.tex')
+    vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
+  else
+    print('This command is for loading LaTeX with Zathura.')
   end
 end
 
@@ -162,7 +175,8 @@ vim.cmd([[
   "map <ScrollWheelLeft>  <CMD>BufferNext<CR>
   "map <ScrollWheelRight> <CMD>BufferPrevious<CR>
 
-  ca ll lua open_latex_zathura()
+  ca ll lua load_latex()
+  ca cl lua clean_latex()
   ca ff Telescope find_files
   ca fg Telescope live_grep
   ca fh Telescope help_tags

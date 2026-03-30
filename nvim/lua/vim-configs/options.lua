@@ -33,11 +33,9 @@ function _G.do_autostarts()
     vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
 
   elseif filetype == 'tex' then
-    vim.cmd('!pdflatex ' .. filename .. '.tex')
-    vim.cmd('!rm ' .. filename .. '.aux')
-    vim.cmd('!rm ' .. filename .. '.log')
-    vim.cmd('!rm ' .. filename .. '.out')
-    vim.cmd('!rm ' .. filename .. '.toc')
+    vim.cmd('silent !pdflatex ' .. filename .. '.tex')
+    vim.cmd('silent !pdflatex ' .. filename .. '.tex')
+    vim.cmd('silent !latexmk -c ' .. filename .. '.tex')
     vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
 
   end
