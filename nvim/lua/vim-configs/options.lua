@@ -20,9 +20,10 @@ local t = function(str)
   return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
-function _G.auto_sync()
+function _G.do_autostarts()
   local is_documents = vim.fn.getcwd():contains('Documents')
   local filetype = vim.api.nvim_eval('&filetype')
+  local filename = vim.fn.expand('%:t'):sub(0, -5)
 
   if is_documents and filetype ~= 'gitcommit' then
     vim.cmd([[
@@ -30,6 +31,15 @@ function _G.auto_sync()
       !rsync -avxHAXP --exclude={'.git*','tools','LICENSE','*.md'} ~/Documents/sway-dotfiles/. ~/
     ]])
     vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
+
+  elseif filetype == 'tex' then
+    vim.cmd('!pdflatex ' .. filename .. '.tex')
+    vim.cmd('!rm ' .. filename .. '.aux')
+    vim.cmd('!rm ' .. filename .. '.log')
+    vim.cmd('!rm ' .. filename .. '.out')
+    vim.cmd('!rm ' .. filename .. '.toc')
+    vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
+
   end
 end
 
@@ -114,9 +124,9 @@ vim.cmd([[
   "  autocmd CmdlineLeave : call timer_start(2000, funcref('s:empty_message'))
   "augroup END
 
-  augroup autosync_nvim
+  augroup autostarts_bufwrite
     autocmd!
-    autocmd BufWritePost * lua auto_sync()
+    autocmd BufWritePost * lua do_autostarts()
   augroup END
 
   augroup autoclose_gitcommit

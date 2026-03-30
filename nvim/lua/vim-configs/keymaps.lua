@@ -28,6 +28,18 @@ function _G.sync_to()
   vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
 end
 
+function _G.open_latex_zathura()
+  do_autostarts()
+
+  local filetype = vim.api.nvim_eval('&filetype')
+  local filename = vim.fn.expand('%:t'):sub(0, -5)
+
+  if filetype == 'tex' then
+    vim.cmd('!zathura --fork --mode fullscreen ' .. filename .. '.pdf')
+    vim.api.nvim_feedkeys(t('<CR>'), 'n', true)
+  end
+end
+
 
 -- ========================= --
 -- =      NORMAL MODE      =
@@ -150,6 +162,7 @@ vim.cmd([[
   "map <ScrollWheelLeft>  <CMD>BufferNext<CR>
   "map <ScrollWheelRight> <CMD>BufferPrevious<CR>
 
+  ca ll lua open_latex_zathura()
   ca ff Telescope find_files
   ca fg Telescope live_grep
   ca fh Telescope help_tags
