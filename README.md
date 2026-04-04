@@ -6,6 +6,7 @@ VSCode style custom dotfiles for Neovim written by Lua Script.
 
 ## Installation
 
+> [!TIP]
 > I highly recommend to use ***'rsync'*** for installation.
 
 <details>
@@ -17,13 +18,13 @@ VSCode style custom dotfiles for Neovim written by Lua Script.
 git clone https://github.com/aruyu/nvim-dotfiles.git ~/Documents/nvim-dotfiles/
 ```
 
-> Use rsync to sync the dotfiles.
+####  Use rsync to sync the dotfiles.
 
 ```bash
 rsync -avxHAXP --include={'gitconfig','.gitconfig'} --exclude={'.*','tools','LICENSE','*.md'} ~/Documents/nvim-dotfiles/* ~/.config/
 ```
 
-> Run *'install.sh'* to install essentials.
+#### Run *'install.sh'* to install essentials.
 
 ``` bash
 bash ~/Documents/nvim-dotfiles/tools/install.sh
@@ -40,7 +41,7 @@ bash ~/Documents/nvim-dotfiles/tools/install.sh
 git clone https://github.com/aruyu/nvim-dotfiles.git ~/.config
 ```
 
-> Run *'install.sh'* to install essentials.
+#### Run *'install.sh'* to install essentials.
 
 ```bash
 bash ~/.config/tools/install.sh
@@ -58,11 +59,13 @@ Type one of belows.
 - Git (set gitcommit templete for optional)
 - Font (*'JetBrainsMono NerdFont'* fonts installation)
 
+> [!NOTE]
 > Restart Neovim ***twice*** for Bootstraping Packer.
 
 ## Issues
 
-**NOTE:** If you have some problems with *'nvim-treesitter'*, you should update *'nvim-treesitter'* with
+> [!NOTE]
+> If you have some problems with *'nvim-treesitter'*, you should update *'nvim-treesitter'* with
 
 ```vim
 :TSUpdate
