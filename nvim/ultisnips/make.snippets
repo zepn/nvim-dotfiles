@@ -53,12 +53,12 @@ snip.rv = format_comment(t[1])
 
 
 
-CC=${2:gcc}
-CFLAGS=${3:-std=c11 -g}
-LDFLAGS=
-LDLIBS=
-OBJS=${4}
-TARGET=`!p
+CC      = ${2:gcc}
+CFLAGS  = ${3:-std=c11 -g}
+LDFLAGS =
+LDLIBS  =
+OBJS    = ${4}
+TARGETS = `!p
 def format_parameter_name(path):
   parts = path.split(' ')
   retval = ''
@@ -72,10 +72,19 @@ def format_parameter_name(path):
 snip.rv = format_parameter_name(t[4])
 `
 
+BOARD      ?= ${5}
+CUR_DIR    ?= $(shell pwd)
+TFTP_DIR   ?= /tftpboot/$(BOARD)_images_$(USER)
+TARGET_DIR ?= $(CUR_DIR)/${6}
 
-all: $(TARGET)
 
-$(TARGET): $(OBJS)
+
+help:
+	@echo
+
+all: $(TARGETS)
+
+$(TARGETS): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
 #%.o : %.c %.h
@@ -97,8 +106,8 @@ snip.rv = format_parameter_name(t[4])
 `
 .PHONY : clean
 clean:
-	rm -f $(OBJS)
-	rm -f $(TARGET)
+	$(RM) $(OBJS)
+	$(RM) $(TARGETS)
 
 install:
 	$0
