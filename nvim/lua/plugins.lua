@@ -150,7 +150,10 @@ return packer.startup(
     }
     use {
       'quangnguyen30192/cmp-nvim-ultisnips',
-      requires = 'SirVer/ultisnips'
+    }
+    use {
+      'SirVer/ultisnips',
+      commit = 'b22a86f9dcc5257624bff3c72d8b902eac468aad'
     }
     use {
       'simrat39/rust-tools.nvim',
