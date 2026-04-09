@@ -86,6 +86,8 @@ vimset.fencs = 'utf-8,cp949,cp932,euc-jp,shift-jis,ucs-2le,latin1,big5'
 --set t_ut=
 --set completeopt=menu,menuone,noselect
 
+--vim.g.python3_host_prog = vim.fn.expand('~/.local/share/nvim/venv/bin/python3.8')
+
 
 
 -- ========================= --
