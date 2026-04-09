@@ -180,11 +180,12 @@ if [ $CURRENT_JOB = $ARCH ]; then
   echo -ne "Progressing...                                                                                \n"
 
   if [[ ${NVIM_VERSION} == "v0.9.5" ]]; then
+    sudo pacman -Rs --noconfirm neovim
     sudo pacman -S --needed --noconfirm libluv libtermkey libvterm msgpack-c tree-sitter unibilium
 
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
-    tar xzvf ~/nvim-linux64.tar.gz -C ~/.cache/
-    sudo ln -s ~/.cache/nvim-linux64/bin/nvim /bin/nvim
+    tar xzvf ~/nvim-linux64.tar.gz -C ~/.local/lib
+    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
     rm ~/nvim-linux64.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
@@ -243,7 +244,7 @@ if [ $CURRENT_JOB = $ARCH ]; then
   progress 100 "Done."
 
 elif [ $CURRENT_JOB = $UBUNTU ]; then
-  progress 5 "Selected OS: $CURRENT_JOB"
+  progress 5 "Selected OS: $CURRENT_JOB (works on 22.04 LTS)"
 
   while true; do
     read -p "Do you want to upgrade your Ubuntu latest? (y/n): " yn
@@ -273,7 +274,7 @@ EOF
   sudo curl https://bootstrap.pypa.io/pip/3.8/get-pip.py -o ~/get-pip.py
   sudo -H python3.8 ~/get-pip.py
 
-  sudo curl -sL https://deb.nodesource.com/setup_14.x -o ~/nodesource_setup.sh
+  sudo curl -sL https://deb.nodesource.com/setup_23.x -o ~/nodesource_setup.sh
   sudo bash ~/nodesource_setup.sh
   sudo apt-get -y install nodejs
   sudo npm install -g yarn
@@ -282,7 +283,7 @@ EOF
   sudo apt-get -y install ruby-dev
 
   pip --version
-  pip3.8 --version
+  pip3 --version
   npm --version
   yarn --version
   ruby --version
@@ -294,11 +295,12 @@ EOF
   echo -ne "Progressing...                                                                                \n"
 
   if [[ ${NVIM_VERSION} == "v0.9.5" ]]; then
+    sudo apt-get -y autoremove neovim
     sudo apt-get -y install libluajit-5.1-2 libluajit-5.1-common
 
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
-    tar xzvf ~/nvim-linux64.tar.gz -C ~/.cache/
-    sudo ln -s ~/.cache/nvim-linux64/bin/nvim /bin/nvim
+    tar xzvf ~/nvim-linux64.tar.gz -C ~/.local/lib
+    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
     rm ~/nvim-linux64.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
@@ -343,10 +345,9 @@ EOF
 
   echo -ne "Progressing...                                                                                \n"
   sudo apt-get -y install python3.8-venv
-  sudo apt-get -y install python3-pynvim
-  sudo apt-get -y install python3-neovim
-  pip3.8 install pynvim
-  pip3.8 install neovim
+  python3.8 -m venv ~/.local/share/nvim/venv
+  ~/.local/share/nvim/venv/bin/pip install pynvim
+  ~/.local/share/nvim/venv/bin/pip install neovim
   sudo npm install -g neovim
   sudo gem install neovim
   echo -ne "\n\n\n\n\n"
