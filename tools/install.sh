@@ -146,7 +146,7 @@ while true; do
   esac
 done
 
-if [[ ${CURRENT_JOB} == ${ARCH} || ${CURRENT_JOB} == ${UBUNTU} ]]; then
+if [[ ${CURRENT_JOB} != ${GIT} && ${CURRENT_JOB} != ${FONT} ]]; then
   while true; do
     read -p "Enter which version you want to install (v0.9.5, nightly): " SELECTION
     case ${SELECTION} in
@@ -377,10 +377,6 @@ elif [ $CURRENT_JOB = $MAC ]; then
   progress 5 "Selected OS: $CURRENT_JOB"
 
   echo -ne "Progressing...                                                                                \n"
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  echo '# Set PATH, MANPATH, etc., for Homebrew.' >> ~/.bashrc
-  echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
-  eval "$(/opt/homebrew/bin/brew shellenv)"
   brew update
   brew upgrade
   brew install node
@@ -397,7 +393,21 @@ elif [ $CURRENT_JOB = $MAC ]; then
 
 
   echo -ne "Progressing...                                                                                \n"
-  brew install neovim
+
+  if [[ ${NVIM_VERSION} == "v0.9.5" ]]; then
+    brew uninstall neovim
+
+    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-macos.tar.gz -o ~/nvim-macos.tar.gz
+    xattr -c ~/nvim-macos.tar.gz
+    mkdir -p ~/.local/lib
+    tar xzvf ~/nvim-macos.tar.gz -C ~/.local/lib
+    sudo ln -s ~/.local/lib/nvim-macos/bin/nvim /usr/local/bin/nvim
+    rm ~/nvim-macos.tar.gz
+
+  elif [[ ${NVIM_VERSION} == "nightly" ]]; then
+    brew install neovim
+  fi
+
   echo -ne "\n\n\n\n\n"
   progress 35 "Install Neovim"
 
