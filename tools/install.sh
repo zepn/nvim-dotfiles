@@ -183,11 +183,12 @@ if [ $CURRENT_JOB = $ARCH ]; then
     sudo pacman -Rs --noconfirm neovim
     sudo pacman -S --needed --noconfirm libluv libtermkey libvterm msgpack-c tree-sitter unibilium
 
-    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
     mkdir -p ~/.local/lib
-    tar xzvf ~/nvim-linux64.tar.gz -C ~/.local/lib
+    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
+
+    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
     sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
-    rm ~/nvim-linux64.tar.gz
+    rm ~/nvim-*.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     sudo pacman -S --needed --noconfirm neovim
@@ -299,11 +300,12 @@ EOF
     sudo apt-get -y autoremove neovim
     sudo apt-get -y install libluajit-5.1-2 libluajit-5.1-common
 
-    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
     mkdir -p ~/.local/lib
-    tar xzvf ~/nvim-linux64.tar.gz -C ~/.local/lib
+    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
+
+    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
     sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
-    rm ~/nvim-linux64.tar.gz
+    rm ~/nvim-*.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
@@ -397,12 +399,13 @@ elif [ $CURRENT_JOB = $MAC ]; then
   if [[ ${NVIM_VERSION} == "v0.9.5" ]]; then
     brew uninstall neovim
 
-    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-macos.tar.gz -o ~/nvim-macos.tar.gz
-    xattr -c ~/nvim-macos.tar.gz
     mkdir -p ~/.local/lib
-    tar xzvf ~/nvim-macos.tar.gz -C ~/.local/lib
+    curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-macos.tar.gz -o ~/nvim-macos.tar.gz
+
+    xattr -c ~/nvim-*.tar.gz
+    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
     sudo ln -s ~/.local/lib/nvim-macos/bin/nvim /usr/local/bin/nvim
-    rm ~/nvim-macos.tar.gz
+    rm ~/nvim-*.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     brew install neovim
