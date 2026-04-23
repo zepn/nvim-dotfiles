@@ -162,6 +162,7 @@ if [ $CURRENT_JOB = $ARCH ]; then
   progress 5 "Selected OS: $CURRENT_JOB"
 
   echo -ne "Progressing...                                                                                \n"
+  sudo pacman -Syy
   sudo pacman -S --needed --noconfirm python
   sudo pacman -S --needed --noconfirm python-pip
   sudo pacman -S --needed --noconfirm nodejs
@@ -380,7 +381,6 @@ elif [ $CURRENT_JOB = $MAC ]; then
 
   echo -ne "Progressing...                                                                                \n"
   brew update
-  brew upgrade
   brew install node
   brew install ruby
   sudo npm install -g yarn
