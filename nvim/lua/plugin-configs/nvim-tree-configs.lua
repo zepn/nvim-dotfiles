@@ -87,10 +87,10 @@ nvim_tree.setup({
 
   renderer = {
     icons = {
-      symlink_arrow = '  ',
+      symlink_arrow = '  ',
       glyphs = {
         default = '',
-        symlink = '',
+        symlink = '',
         bookmark = '',
         folder = {
           arrow_closed = '',
@@ -105,11 +105,11 @@ nvim_tree.setup({
         git = {
           unstaged = '',
           staged = '',
-          unmerged = '',
+          unmerged = '',
           renamed = '',
           untracked = '',
           deleted = '',
-          ignored = '',
+          ignored = '󰘓',
         },
       },
     },
