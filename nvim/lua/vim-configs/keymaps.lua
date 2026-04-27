@@ -177,6 +177,8 @@ vim.cmd([[
 
   ca ll lua load_latex()
   ca cl lua clean_latex()
+  ca cx !chmod +x %<CR>
+  ca cnx !chmod -x %<CR>
   ca ff Telescope find_files
   ca fg Telescope live_grep
   ca fh Telescope help_tags
