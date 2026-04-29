@@ -150,7 +150,7 @@ if [[ ${CURRENT_JOB} != ${GIT} && ${CURRENT_JOB} != ${FONT} ]]; then
   while true; do
     read -p "Enter which version you want to install (v0.9.5, nightly): " SELECTION
     case ${SELECTION} in
-      v0.9.5 )                  NVIM_VERSION=${SELECTION}; break;;
+      v0.9.5 | 0.9.5 )          NVIM_VERSION=${SELECTION}; break;;
       nightly )                 NVIM_VERSION=${SELECTION}; break;;
       * )                       echo "Wrong answer.";;
     esac
@@ -188,8 +188,10 @@ if [ $CURRENT_JOB = $ARCH ]; then
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
 
     tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
-    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
+    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /usr/local/bin/nvim
     rm ~/nvim-*.tar.gz
+
+    # TODO: move nvim bin to rootfs
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     sudo pacman -S --needed --noconfirm neovim
@@ -305,7 +307,7 @@ EOF
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
 
     tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
-    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /bin/nvim
+    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /usr/local/bin/nvim
     rm ~/nvim-*.tar.gz
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
@@ -339,8 +341,9 @@ EOF
   echo -ne "Progressing...                                                                                \n"
   sudo apt-get -y install unzip
   sudo apt-get -y install ripgrep
-  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+
+  version=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${version}_Linux_x86_64.tar.gz"
   tar xf lazygit.tar.gz lazygit
   sudo install lazygit /usr/local/bin
   rm lazygit.tar.gz lazygit
