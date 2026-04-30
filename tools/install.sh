@@ -158,8 +158,8 @@ if [[ ${CURRENT_JOB} != ${GIT} && ${CURRENT_JOB} != ${FONT} ]]; then
 fi
 
 
-if [ $CURRENT_JOB = $ARCH ]; then
-  progress 5 "Selected OS: $CURRENT_JOB"
+if [[ ${CURRENT_JOB} == ${ARCH} ]]; then
+  progress 5 "Selected OS: ${CURRENT_JOB}"
 
   echo -ne "Progressing...                                                                                \n"
   sudo pacman -Syy
@@ -248,8 +248,8 @@ if [ $CURRENT_JOB = $ARCH ]; then
   echo -ne "\n\n\n\n\n"
   progress 100 "Done."
 
-elif [ $CURRENT_JOB = $UBUNTU ]; then
-  progress 5 "Selected OS: $CURRENT_JOB (works on 22.04 LTS)"
+elif [[ ${CURRENT_JOB} == ${UBUNTU} ]]; then
+  progress 5 "Selected OS: ${CURRENT_JOB} (22.04 LTS)"
 
   while true; do
     read -p "Do you want to upgrade your Ubuntu latest? (y/n): " yn
@@ -379,8 +379,8 @@ EOF
   echo -ne "\n\n\n\n\n"
   progress 100 "Done."
 
-elif [ $CURRENT_JOB = $MAC ]; then
-  progress 5 "Selected OS: $CURRENT_JOB"
+elif [[ ${CURRENT_JOB} == ${MAC} ]]; then
+  progress 5 "Selected OS: ${CURRENT_JOB}"
 
   echo -ne "Progressing...                                                                                \n"
   brew update
@@ -463,8 +463,8 @@ elif [ $CURRENT_JOB = $MAC ]; then
   echo -ne "\n\n\n\n\n"
   progress 100 "Done."
 
-elif [ $CURRENT_JOB = $GIT ]; then
-  echo -ne "Selected Job: $CURRENT_JOB\n"
+elif [[ ${CURRENT_JOB} == ${GIT} ]]; then
+  echo -ne "Selected Job: ${CURRENT_JOB}\n"
   read -p "Enter the git user.name: " USERNAME
   read -p "Enter the git user.email: " USEREMAIL
 
@@ -478,8 +478,8 @@ elif [ $CURRENT_JOB = $GIT ]; then
   git config --global core.editor
   git config --global commit.template
 
-elif [ $CURRENT_JOB = $FONT ]; then
-  echo -ne "Selected Job: $CURRENT_JOB\n"
+elif [[ ${CURRENT_JOB} == ${FONT} ]]; then
+  echo -ne "Selected Job: ${CURRENT_JOB}\n"
 
   mkdir -p $HOME/.local/share/fonts/
   curl -OL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz || error_exit "Installation Faild... curl needed."
@@ -490,4 +490,4 @@ elif [ $CURRENT_JOB = $FONT ]; then
 fi
 
 
-script_print_notify "$CURRENT_JOB installation successfully done.\n"
+script_print_notify "${CURRENT_JOB} installation successfully done.\n"
