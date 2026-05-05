@@ -184,14 +184,11 @@ if [[ ${CURRENT_JOB} == ${ARCH} ]]; then
     sudo pacman -Rs --noconfirm neovim
     sudo pacman -S --needed --noconfirm libluv libtermkey libvterm msgpack-c tree-sitter unibilium
 
-    mkdir -p ~/.local/lib
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
-
-    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
-    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /usr/local/bin/nvim
-    rm ~/nvim-*.tar.gz
-
-    # TODO: move nvim bin to rootfs
+    tar xzvf ~/nvim-*
+    sudo chown -R root:root ~/nvim-*
+    sudo cp -arf ~/nvim-linux64/* /usr/local/
+    sudo rm -r ~/nvim-*
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     sudo pacman -S --needed --noconfirm neovim
@@ -303,12 +300,11 @@ EOF
     sudo apt-get -y autoremove neovim
     sudo apt-get -y install libluajit-5.1-2 libluajit-5.1-common
 
-    mkdir -p ~/.local/lib
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-linux64.tar.gz -o ~/nvim-linux64.tar.gz
-
-    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
-    sudo ln -s ~/.local/lib/nvim-linux64/bin/nvim /usr/local/bin/nvim
-    rm ~/nvim-*.tar.gz
+    tar xzvf ~/nvim-*
+    sudo chown -R root:root ~/nvim-*
+    sudo cp -arf ~/nvim-linux64/* /usr/local/
+    sudo rm -r ~/nvim-*
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
@@ -402,13 +398,12 @@ elif [[ ${CURRENT_JOB} == ${MAC} ]]; then
   if [[ ${NVIM_VERSION} == "v0.9.5" ]]; then
     brew uninstall neovim
 
-    mkdir -p ~/.local/lib
     curl -sL https://github.com/neovim/neovim/releases/download/v0.9.5/nvim-macos.tar.gz -o ~/nvim-macos.tar.gz
-
-    xattr -c ~/nvim-*.tar.gz
-    tar xzvf ~/nvim-*.tar.gz -C ~/.local/lib
-    sudo ln -s ~/.local/lib/nvim-macos/bin/nvim /usr/local/bin/nvim
-    rm ~/nvim-*.tar.gz
+    xattr -c ~/nvim-*
+    tar xzvf ~/nvim-*
+    sudo chown -R root:wheel ~/nvim-*
+    sudo cp -arf ~/nvim-macos/* /usr/local/
+    sudo rm -r ~/nvim-*
 
   elif [[ ${NVIM_VERSION} == "nightly" ]]; then
     brew install neovim
