@@ -26,7 +26,7 @@ nvim_ultivisual.setup({
   -- You can switch the ultimate visual features.
   features = {
     indent = true,
-    brackets = false,
+    brackets = true,
     paste = true,
     copy = true,
     cut = true,
@@ -50,10 +50,16 @@ nvim_ultivisual.setup({
     brackets = {
       -- Only for 'v'; visual mode.
       -- You can config the brackets' shape whatever you want.
-      { key = '(', shapes = { '(',')' } },
-      { key = '[', shapes = { '[',']' } },
-      { key = '{', shapes = { '{','}' } },
-      { key = '<', shapes = { '<','>' } },
+      { key = '(',  shapes = { '(',')' } },
+      { key = ')',  shapes = { '(',')' } },
+      { key = '[',  shapes = { '[',']' } },
+      { key = ']',  shapes = { '[',']' } },
+      { key = '{',  shapes = { '{','}' } },
+      { key = '}',  shapes = { '{','}' } },
+      { key = '<',  shapes = { '<','>' } },
+      { key = '>',  shapes = { '<','>' } },
+      { key = '\"', shapes = { '\"','\"' } },
+      { key = '\'', shapes = { '\'','\'' } },
     },
 
     paste = {
