@@ -1,0 +1,27 @@
+snippet %%=
+% =====
+% $0
+% =====
+endsnippet
+
+snippet __comment=
+% -
+% `!v expand('%:t')`
+% =====
+% ${2}
+%
+% ${1:ZepN} <`!p
+def format_comment(path):
+  if path.startswith("Chae"):
+    retval = "chaelj@solidwt.co.kr"
+  else:
+    retval = "vine9151@gmail.com"
+  return retval
+
+snip.rv = format_comment(t[1])
+`> +`date +%Y.%m.%d`
+% -
+
+$0
+endsnippet
+
