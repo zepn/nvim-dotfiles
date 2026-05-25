@@ -42,14 +42,14 @@ nvim_indentconfig.setup({
     {
       expandtab = false,
       size = 4,
-      filetype = { 'c','asm' }
+      filetype = { 'asm' }
     },
 
     {
       expandtab = true,
       size = 4,
       filetype = {
-        'cpp','php','rust',
+        'c', 'cpp','php','rust',
         'systemverilog','verilog','vhdl','xml'
       }
     },
