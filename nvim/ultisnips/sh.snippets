@@ -1,56 +1,49 @@
-snippet ##=
-#==
-#   $0
-#/
+snippet %%=
+# =====
+# $0
+# =====
 endsnippet
 
 snippet __comment=
 #!/bin/bash
-#==
-#   NOTE      - `!v expand('%:t')`
-#   Author    - ${1:Aru}
+# -
+# `!v expand('%:t')`
+# =====
+# ${2}
 #
-#   Created   - `date +%Y.%m.%d`
-`!p
+# ${1:ZepN} <`!p
 def format_comment(path):
-  front = "#   "
   if path.startswith("Chae"):
-    retval = front + "Website   - http://www.solidwintech.co.kr\n" + \
-             front + "Contact   - chaelj@solidwt.co.kr"
+    retval = "chaelj@solidwt.co.kr"
   else:
-    retval = front + "Github    - https://github.com/aruyu\n" + \
-             front + "Contact   - vine9151@gmail.com"
+    retval = "vine9151@gmail.com"
   return retval
 
 snip.rv = format_comment(t[1])
-`
-#/
-
-
+`> +`date +%Y.%m.%d`
+# -
 
 $0
 endsnippet
 
 snippet __comment_all=
 #!/bin/bash
-#==
-#   NOTE      - `!v expand('%:t')`
-#   Author    - ${1:Aru}
+# -
+# `!v expand('%:t')`
+# =====
+# ${2}
 #
-#   Created   - `date +%Y.%m.%d`
-`!p
+# ${1:ZepN} <`!p
 def format_comment(path):
   if path.startswith("Chae"):
-    retval = "#   Website   - http://www.solidwintech.co.kr\n" \
-             "#   Contact   - chaelj@solidwt.co.kr"
+    retval = "chaelj@solidwt.co.kr"
   else:
-    retval = "#   Github    - https://github.com/aruyu\n" \
-             "#   Contact   - vine9151@gmail.com"
+    retval = "vine9151@gmail.com"
   return retval
 
 snip.rv = format_comment(t[1])
-`
-#/
+`> +`date +%Y.%m.%d`
+# -
 
 
 
@@ -101,13 +94,12 @@ function error_exit()
 
 
 
+# =====
+# Starting codes in blew
+# =====
 
-#==
-#   Starting codes in blew
-#/
-
-if [[ $EUID ${2:-eq} 0 ]]; then
-  error_exit "This script must be run as ${3:USER}!"
+if [[ $EUID ${3:-eq} 0 ]]; then
+  error_exit "This script must be run as ${4:USER}!"
 fi
 
 
