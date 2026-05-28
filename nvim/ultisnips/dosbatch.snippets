@@ -1,30 +1,27 @@
 snippet ##=
-REM=
+REM =====
 REM  $0
-REM
+REM =====
 endsnippet
 
 snippet __comment=
 @echo off
-REM=
-REM  NOTE      - `!v expand('%:t')`
-REM  Author    - ${1:Aru}
+REM -
+REM `!v expand('%:t')`
+REM =====
+REM ${2}
 REM
-REM  Created   - `date +%Y.%m.%d`
-`!p
+REM ${1:ZepN} <`!p
 def format_comment(path):
-  front = "REM  "
   if path.startswith("Chae"):
-    retval = front + "Website   - http://www.solidwintech.co.kr\n" + \
-             front + "Contact   - chaelj@solidwt.co.kr"
+    retval = "chaelj@solidwt.co.kr"
   else:
-    retval = front + "Github    - https://github.com/aruyu\n" + \
-             front + "Contact   - vine9151@gmail.com"
+    retval = "vine9151@gmail.com"
   return retval
 
 snip.rv = format_comment(t[1])
-`
-REM
+`> +`date +%Y.%m.%d`
+REM -
 
 
 
