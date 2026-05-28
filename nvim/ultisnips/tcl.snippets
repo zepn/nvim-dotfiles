@@ -50,7 +50,7 @@ snip.rv = format_comment(t[1])
 
 
 # =====
-#   1. Set variables
+# 1. Set variables
 # =====
 set src_directory "../../SRCS"
 set hdl_directory "${src_directory}/hdl/${2}"
@@ -63,12 +63,12 @@ set tb_file ${4}
 
 
 # =====
-#   2. Compile HDLs
+# 2. Compile HDLs
 # =====
 foreach hdl_file ${hdl_files} {
   puts "Compiling file: ${hdl_file}"
 
-  if { [string match "*.vhdl" ${hdl_file}] } {
+  if { [string match "*.vhdl" ${hdl_file}] || [string match "*.vhd" ${tb_file}] } {
     # Case for VHDL.
     vcom -quiet -93 -work work ${hdl_directory}/${hdl_file}
   } elseif { [string match "*.v" ${hdl_file}] || [string match "*.sv" ${hdl_file}] } {
@@ -82,9 +82,9 @@ foreach hdl_file ${hdl_files} {
 
 
 # =====
-#   3. Compile Testbench
+# 3. Compile Testbench
 # =====
-if { [string match "*.vhdl" ${tb_file}] } {
+if { [string match "*.vhdl" ${tb_file}] || [string match "*.vhd" ${tb_file}] } {
   # Case for VHDL.
   vcom -quiet -2008 -work work ${tb_directory}/${tb_file}
 } elseif { [string match "*.v" ${tb_file}] || [string match "*.sv" ${tb_file}] } {
@@ -119,20 +119,20 @@ snip.rv = format_comment(t[1])
 
 
 # =====
-#   1. Set variables
+# 1. Set variables
 # =====
 set tb_module ${2}
 
 
 # =====
-#   2. Simulation & Create wave
+# 2. Simulation & Create wave
 # =====
 vsim work.${tb_module}
 write format wave -window .main_pane.wave.interior.cs.body.pw.wf ./wave.do
 
 
 # =====
-#   3. Run it
+# 3. Run it
 # =====
 do wave.do
 run 400ms
