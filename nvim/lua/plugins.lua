@@ -119,7 +119,7 @@ return packer.startup(
       'lukas-reineke/indent-blankline.nvim',
       tag = 'v3.5.4'
     }
-    use 'aruyu/nvim-ultivisual'
+    use 'zepn/nvim-ultivisual'
     use {
       'karb94/neoscroll.nvim',
       commit = 'e78657719485c5663b88e5d96ffcfb6a2fe3eec0'
@@ -181,7 +181,7 @@ return packer.startup(
 
     -- === Others === --
     use 'windwp/nvim-autopairs'
-    use 'aruyu/nvim-indentconfig'
+    use 'zepn/nvim-indentconfig'
     use 'lambdalisue/suda.vim'
 
     -- ================= --
