@@ -13,7 +13,7 @@ snippet __comment=
 #
 # ${1:ZepN} <`!p
 def format_comment(path):
-  if path.startswith("Chae"):
+  if path.startswith("Chae") or path.startswith(" "):
     retval = "chaelj@solidwt.co.kr"
   else:
     retval = "vine9151@gmail.com"
@@ -37,7 +37,7 @@ snippet __comment_all=
 #
 # ${1:ZepN} <`!p
 def format_comment(path):
-  if path.startswith("Chae"):
+  if path.startswith("Chae") or path.startswith(" "):
     retval = "chaelj@solidwt.co.kr"
   else:
     retval = "vine9151@gmail.com"
@@ -49,11 +49,11 @@ snip.rv = format_comment(t[1])
 
 
 
-CC      = ${2:gcc}
-CFLAGS  = ${3:-std=c11 -g}
+CC      = ${3:gcc}
+CFLAGS  = ${4:-std=c11 -g}
 LDFLAGS =
 LDLIBS  =
-OBJS    = ${4}
+OBJS    = ${5}
 TARGETS = `!p
 def format_parameter_name(path):
   parts = path.split(' ')
@@ -68,10 +68,10 @@ def format_parameter_name(path):
 snip.rv = format_parameter_name(t[4])
 `
 
-BOARD      ?= ${5}
+BOARD      ?= ${6}
 CUR_DIR    ?= $(shell pwd)
 TFTP_DIR   ?= /tftpboot/$(BOARD)_images_$(USER)
-TARGET_DIR ?= $(CUR_DIR)/${6}
+TARGET_DIR ?= $(CUR_DIR)/${7}
 
 
 
