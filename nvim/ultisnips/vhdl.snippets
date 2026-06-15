@@ -102,13 +102,13 @@ signal $0 : ${1:STD_LOGIC_VECTOR} ( ${2} downto 0 );
 endsnippet
 
 snippet process "automake process" b
-process (${1:resetN, }):
+process (${1:rstN, }):
 begin
     `!p
 def format_class(path):
   parts = path.split(',')
-  if path.startswith("resetN,"):
-    retval = "if (resetN = '0') then"
+  if path.startswith("rstN,"):
+    retval = "if (rstN = '0') then"
   else:
     retval = "if rising_edge ( " + parts[0] + " ) then"
 
@@ -116,18 +116,20 @@ def format_class(path):
 
 snip.rv = format_class(t[1])
 `
-        ${2}`!p
+        ${2}
+`!p
 def format_class(path):
   parts = path.split(',')
-  if path.startswith("resetN,"):
-    retval = "\n    elsif rising_edge (" + parts[1] + " ) then\n        "
+  if path.startswith("rstN,"):
+    retval = "    elsif rising_edge (" + parts[1] + " ) then"
   else:
     retval = ""
 
   return retval
 
 snip.rv = format_class(t[1])
-`$0
+`
+        $0
     end if;
 end process;
 endsnippet
