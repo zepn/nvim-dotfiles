@@ -53,13 +53,13 @@ snip.rv = format_comment(t[1])
 # 1. Set variables
 # =====
 set src_directory "../../SRCS"
-set hdl_directory "${src_directory}/hdl/${2}"
-set tb_directory "${src_directory}/tb/$2"
+set hdl_directory "${src_directory}/hdl/${3}"
+set tb_directory "${src_directory}/tb/$3"
 
 set hdl_files {
-  ${3}
+  ${4}
 }
-set tb_file ${4}
+set tb_file ${5}
 
 
 # =====
@@ -121,7 +121,7 @@ snip.rv = format_comment(t[1])
 # =====
 # 1. Set variables
 # =====
-set tb_module ${2}
+set tb_module ${3}
 
 
 # =====
