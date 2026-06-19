@@ -161,6 +161,148 @@ vsim -t 1ps           \
 $0
 endsnippet
 
+snippet __comment_lib=
+#!/bin/tclsh
+# -
+# `!v expand('%:t')`
+# =====
+# ${2:Add external library}
+#
+# ${1:ZepN} <`!p
+def format_comment(path):
+  if path.startswith("Chae") or path.startswith(" "):
+    retval = "chaelj@solidwt.co.kr"
+  else:
+    retval = "zepn.git@gmail.com"
+  return retval
+
+snip.rv = format_comment(t[1])
+`> +`date +%Y.%m.%d`
+# -
+
+
+
+# =====
+# -. Procedure to compile file
+# =====
+proc compile_file {src_file target} {
+  try {
+    if { [string match "*.vhd" ${src_file}] || [string match "*.vhdl" ${src_file}] } {
+      # Case for VHDL. [ -autoorder, -just p/b/e/a ]
+      vcom -quiet -93 -work ${target} ${src_file}
+    } elseif { [string match "*.v" ${src_file}] || [string match "*.sv" ${src_file}] } {
+      # Case for Verilog/SystemVerilog. [ -mfcu ]
+      vlog -quiet -work ${target} ${src_file}
+    } else {
+      # Other cases.
+      puts "Warning: Unknown file type for ${src_file}"
+    }
+    return 0
+  } on error {msg} {
+    return -1
+  }
+}
+
+
+# =====
+# -. Procedure to compile file with auto order
+# =====
+proc compile_autoorder {src_files target} {
+  set pending_files ${src_files}
+  set max_passes 5
+  set pass 1
+
+  while { [llength ${pending_files}] > 0 && ${pass} <= ${max_passes} } {
+    puts "Compiling [llength ${pending_files}] file(s)... RETRY ${pass} of ${max_passes}"
+
+    set failed_files {}
+
+    foreach single_file ${pending_files} {
+      if { [compile_file ${single_file} ${target}] != 0 } {
+        lappend failed_files ${single_file}
+      }
+    }
+
+    if { [llength ${failed_files}] == [llength ${pending_files}] } {
+      puts "Failed to compile [llength ${pending_files}] file(s):"
+      foreach failed_file ${failed_files} {
+        puts "${failed_file}"
+      }
+      break
+    }
+
+    set pending_files ${failed_files}
+    incr pass
+  }
+}
+
+
+# =====
+# -. Procedure to compile all of files
+# =====
+proc compile_all {src_dir target} {
+  set ext_points {
+    "vhd"
+    "vhdl"
+    "v"
+    "sv"
+  }
+
+  foreach ext ${ext_points} {
+    set src_files [glob -nocomplain [file join ${src_dir} "*.${ext}"]]
+
+    if { [llength ${src_files}] != 0 } {
+      puts "\nStarting compile files: ${src_dir}/*.${ext}"
+      compile_autoorder ${src_files} ${target}
+    }
+  }
+
+  set sub_dirs [glob -nocomplain -types d [file join ${src_dir} *]]
+  foreach sub_dir ${sub_dirs} {
+    compile_all ${sub_dir} ${target}
+  }
+}
+
+
+# =====
+# -. Procedure to create library
+# =====
+proc create_lib {module_list src_dir target} {
+  puts "\n=== Create ${target} Library ==="
+  vlib ${target}
+  vmap ${target} ${target}
+
+  foreach module ${module_list} {
+    compile_all ${src_dir}/[file rootname ${module}] ${target}
+  }
+}
+
+
+# =====
+# 1. Set variables
+# =====
+set lib_name ${3}
+set lib_directory "${4}/${lib_name}"
+
+set module_names {
+  ${5}
+}
+
+
+# =====
+# 2. Create library
+# =====
+create_lib ${module_names} ${lib_directory} ${lib_name}
+
+
+# =====
+# 3. Refresh
+# =====
+vcom -refresh -work ${lib_name}
+vlog -refresh -work ${lib_name}
+$0
+endsnippet
+
 snippet if "if operator" b
 if {${1}} {
   $0
