@@ -50,31 +50,92 @@ snip.rv = format_comment(t[1])
 
 
 # =====
-# -. Procedure to compile files
+# -. Procedure to compile file
 # =====
-proc compile_files {src_files src_dir target} {
-  if { [string equal -nocase ${target} "HDL"] } {
-    set version 93
-  } elseif { [string equal -nocase ${target} "TB"] } {
-    set version 2008
-  } else {
-    puts "Warning: Unknown target ${target}"
-    return
-  }
-
-  foreach src_file ${src_files} {
-    puts "Compiling ${target} file: ${src_file}"
+proc compile_file {src_file target} {
+  try {
+    if { [string equal -nocase ${target} "HDL"] } {
+      set version 93
+    } elseif { [string equal -nocase ${target} "TB"] } {
+      set version 2008
+    } else {
+      puts "Warning: Unknown target ${target}"
+      return
+    }
 
     if { [string match "*.vhd" ${src_file}] || [string match "*.vhdl" ${src_file}] } {
-      # Case for VHDL.
-      vcom -quiet -${version} -work work ${src_dir}/${src_file}
+      # Case for VHDL. [ -autoorder, -just p/b/e/a ]
+      vcom -quiet -${version} -work work ${src_file}
     } elseif { [string match "*.v" ${src_file}] || [string match "*.sv" ${src_file}] } {
-      # Case for Verilog/SystemVerilog.
-      vlog -quiet -work work ${src_dir}/${src_file}
+      # Case for Verilog/SystemVerilog. [ -mfcu ]
+      vlog -quiet -work work ${src_file}
     } else {
       # Other cases.
       puts "Warning: Unknown file type for ${src_file}"
     }
+    return 0
+  } on error {msg} {
+    return -1
+  }
+}
+
+
+# =====
+# -. Procedure to compile file with auto order
+# =====
+proc compile_autoorder {src_files target} {
+  set pending_files ${src_files}
+  set max_passes 5
+  set pass 1
+
+  while { [llength ${pending_files}] > 0 && ${pass} <= ${max_passes} } {
+    puts "Compiling [llength ${pending_files}] file(s)... RETRY ${pass} of ${max_passes}"
+
+    set failed_files {}
+
+    foreach single_file ${pending_files} {
+      if { [compile_file ${single_file} ${target}] != 0 } {
+        lappend failed_files ${single_file}
+      }
+    }
+
+    if { [llength ${failed_files}] == [llength ${pending_files}] } {
+      puts "Failed to compile [llength ${pending_files}] file(s):"
+      foreach failed_file ${failed_files} {
+        puts "${failed_file}"
+      }
+      break
+    }
+
+    set pending_files ${failed_files}
+    incr pass
+  }
+}
+
+
+# =====
+# -. Procedure to compile all of files
+# =====
+proc compile_all {src_dir target} {
+  set ext_points {
+    "vhd"
+    "vhdl"
+    "v"
+    "sv"
+  }
+
+  foreach ext ${ext_points} {
+    set src_files [glob -nocomplain [file join ${src_dir} "*.${ext}"]]
+
+    if { [llength ${src_files}] != 0 } {
+      puts "\nStarting compile files: ${src_dir}/*.${ext}"
+      compile_autoorder ${src_files} ${target}
+    }
+  }
+
+  set sub_dirs [glob -nocomplain -types d [file join ${src_dir} *]]
+  foreach sub_dir ${sub_dirs} {
+    compile_all ${sub_dir} ${target}
   }
 }
 
@@ -86,16 +147,9 @@ set src_directory "../../SRCS"
 set hdl_directory "${src_directory}/hdl/${3}"
 set tb_directory "${src_directory}/tb/$3"
 
-set hdl_files {
-  ${4}
-}
-set tb_files {
-  ${5}
-}
-
 
 # =====
-# 2. Map libraries
+# 2. Map library
 # =====
 vlib work
 vmap work work
@@ -104,8 +158,16 @@ vmap work work
 # =====
 # 3. Compile files
 # =====
-compile_files ${hdl_files} ${hdl_directory} "HDL"
-compile_files ${tb_files} ${tb_directory} "TB"
+puts "\n===      Compile HDL/TB      ==="
+compile_all ${hdl_directory} "HDL"
+compile_all ${tb_directory} "TB"
+
+
+# =====
+# 4. Refresh
+# =====
+vcom -refresh -work work
+vlog -refresh -work work
 $0
 endsnippet
 
@@ -156,7 +218,7 @@ vsim -t 1ps           \
 # =====
 # 4. Run
 # =====
-#puts "Starting Simulation: ${tb_top}"
+puts "\n=== Start Simulation ${tb_top} ===\n"
 #run -all
 $0
 endsnippet
@@ -265,20 +327,6 @@ proc compile_all {src_dir target} {
 
 
 # =====
-# -. Procedure to create library
-# =====
-proc create_lib {module_list src_dir target} {
-  puts "\n=== Create ${target} Library ==="
-  vlib ${target}
-  vmap ${target} ${target}
-
-  foreach module ${module_list} {
-    compile_all ${src_dir}/[file rootname ${module}] ${target}
-  }
-}
-
-
-# =====
 # 1. Set variables
 # =====
 set lib_name ${3}
@@ -290,32 +338,42 @@ set module_names {
 
 
 # =====
-# 2. Create library
+# 2. Map library
 # =====
-create_lib ${module_names} ${lib_directory} ${lib_name}
+vlib ${lib_name}
+vmap ${lib_name} ${lib_name}
 
 
 # =====
-# 3. Refresh
+# 3. Compile library
+# =====
+foreach module ${module_names} {
+  puts "\n=== Compile ${lib_name}/${module} ==="
+  compile_all ${lib_directory}/[file rootname ${module}] ${lib_name}
+}
+
+
+# =====
+# 4. Refresh
 # =====
 vcom -refresh -work ${lib_name}
 vlog -refresh -work ${lib_name}
 $0
 endsnippet
 
-snippet if "if operator" b
+snippet if
 if {${1}} {
   $0
 }
 endsnippet
 
-snippet else "else operator" b
+snippet else
 else {
   $0
 }
 endsnippet
 
-snippet "if .. elseif" "if elseif operator" b
+snippet "if .. elseif"
 if {${1}} {
   ${3}
 } elseif {${2:$1}} {
@@ -323,31 +381,31 @@ if {${1}} {
 }
 endsnippet
 
-snippet while "while operator" b
+snippet while
 while {${1:1}} {
 	$0
 }
 endsnippet
 
-snippet "for set i <= .." "for operator" b
+snippet "for set i <= .."
 for {set ${1:i} 0} {$1 <= ${2}} {incr $1} {
 	$0
 }
 endsnippet
 
-snippet "for set i >= .." "for operator" b
+snippet "for set i >= .."
 for {set ${1:i} 0} {$1 >= ${2}} {incr $1} {
 	$0
 }
 endsnippet
 
-snippet foreach "foreach operator" b
+snippet foreach
 foreach ${1:i} ${2:list} {
   $0
 }
 endsnippet
 
-snippet switch "switch operator" b
+snippet switch
 switch ${1} {
   ${2:0}
     {$0}
@@ -357,7 +415,7 @@ switch ${1} {
 }
 endsnippet
 
-snippet proc "procedure definition" b
+snippet proc
 proc ${1:name} {${2}} {
   $0
 }
