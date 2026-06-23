@@ -29,17 +29,20 @@ snip.rv = format_comment(t[1])
 `> +`date +%Y.%m.%d`
 --
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.ALL;
 
 $0
 endsnippet
 
 snippet entity
 entity ${1} is
-PORT (
-    -- Inputs
+port (
+    -- CLK,RST
     ${2}
+
+    -- Inputs
+    ${3}
 
     -- Outputs
     $0
@@ -61,9 +64,12 @@ endsnippet
 
 snippet component
 component ${1} is
-PORT (
-    -- Inputs
+port (
+    -- CLK,RST
     ${2}
+
+    -- Inputs
+    ${3}
 
     -- Outputs
     $0
@@ -78,9 +84,12 @@ def format_import_name(path):
 
 snip.rv = format_import_name(t[1])
 `} : ${1}
-PORT MAP (
-    -- Inputs
+port map (
+    -- CLK,RST
     ${3}
+
+    -- Inputs
+    ${4}
 
     -- Outputs
     $0
@@ -94,21 +103,25 @@ type ${1} is (
 endsnippet
 
 snippet signal
-signal $0 : ${1:STD_LOGIC};
+signal $0 : ${1:std_logic};
 endsnippet
 
-snippet signalvector
-signal $0 : ${1:STD_LOGIC_VECTOR} ( ${2} downto 0 );
+snippet "signal .. downto 0"
+signal $0 : ${1:std_logic_vector} ( ${2} downto 0 );
+endsnippet
+
+snippet "signal 0 to .."
+signal $0 : ${1:std_logic_vector} ( 0 to ${2} );
 endsnippet
 
 snippet process "automake process" b
-process (${1:rstN, }):
+process (${1:rst_n, })
 begin
     `!p
 def format_class(path):
   parts = path.split(',')
-  if path.startswith("rstN,"):
-    retval = "if (rstN = '0') then"
+  if path.startswith("rst_n,"):
+    retval = "if (rst_n = '0') then"
   else:
     retval = "if rising_edge ( " + parts[0] + " ) then"
 
@@ -120,7 +133,7 @@ snip.rv = format_class(t[1])
 `!p
 def format_class(path):
   parts = path.split(',')
-  if path.startswith("rstN,"):
+  if path.startswith("rst_n,"):
     retval = "    elsif rising_edge (" + parts[1] + " ) then"
   else:
     retval = ""
@@ -132,6 +145,18 @@ snip.rv = format_class(t[1])
         $0
     end if;
 end process;
+endsnippet
+
+snippet "for .. downto 0"
+for ${1:i} in ${2} downto 0 loop
+    $0
+end loop;
+endsnippet
+
+snippet "for 0 to .."
+for ${1:i} in .. to ${2} loop
+    $0
+end loop;
 endsnippet
 
 snippet if
