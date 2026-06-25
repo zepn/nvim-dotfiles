@@ -1,7 +1,10 @@
 snippet --=
--- =====
--- $0
--- =====
+-- =================================== --
+--  $0
+-- =================================== --
+
+-- -----------------------------------
+--/
 endsnippet
 
 snippet __brief=
@@ -39,13 +42,9 @@ snippet entity
 entity ${1} is
 port (
     -- CLK,RST
-    ${2}
-
-    -- Inputs
-    ${3}
-
-    -- Outputs
     $0
+    -- Inputs
+    -- Outputs
 );
 end $1;
 endsnippet
@@ -66,13 +65,9 @@ snippet component
 component ${1} is
 port (
     -- CLK,RST
-    ${2}
-
-    -- Inputs
-    ${3}
-
-    -- Outputs
     $0
+    -- Inputs
+    -- Outputs
 );
 end component;
 endsnippet
@@ -86,13 +81,9 @@ snip.rv = format_import_name(t[1])
 `} : ${1}
 port map (
     -- CLK,RST
-    ${3}
-
-    -- Inputs
-    ${4}
-
-    -- Outputs
     $0
+    -- Inputs
+    -- Outputs
 );
 endsnippet
 
@@ -114,36 +105,73 @@ snippet "signal 0 to .."
 signal $0 : ${1:std_logic_vector} ( 0 to ${2} );
 endsnippet
 
-snippet process "automake process" b
-process (${1:rstn, })
+snippet process
+process (${1:clk, rstn})
 begin
     `!p
 def format_class(path):
-  parts = path.split(',')
-  if path.startswith("rstn,"):
-    retval = "if (rstn = '0') then"
-  else:
-    retval = "if rising_edge ( " + parts[0] + " ) then"
+  parts     = path.split(',')
+  parts_len = len(parts);
+  retval    = ''
+
+  if parts_len == 2:
+    for i in range(parts_len):
+      if parts[i] != '' and parts[i].endswith('clk'):
+        if i == 0:
+          tmp_idx = 1
+        else:
+          tmp_idx = 0
+
+        if parts[tmp_idx].startswith(' '):
+          tmp_val = parts[tmp_idx].lstrip()
+        else:
+          tmp_val = parts[tmp_idx]
+
+        retval = "if (" + tmp_val + " = '0') then"
+        break
 
   return retval
 
 snip.rv = format_class(t[1])
 `
-        ${2}
-`!p
+    $0
+    `!p
 def format_class(path):
-  parts = path.split(',')
-  if path.startswith("rstn,"):
-    retval = "    elsif rising_edge (" + parts[1] + " ) then"
-  else:
-    retval = ""
+  parts     = path.split(',')
+  parts_len = len(parts);
+  retval    = ''
+
+  if parts_len == 2:
+    for i in range(parts_len):
+      if parts[i] != '' and parts[i].endswith('clk'):
+        if parts[i].startswith(' '):
+          tmp_val = parts[i].lstrip()
+        else:
+          tmp_val = parts[i]
+
+        retval = "elsif rising_edge (" + tmp_val + ") then\n"
+        break
 
   return retval
 
 snip.rv = format_class(t[1])
 `
-        $0
-    end if;
+    `!p
+def format_class(path):
+  parts     = path.split(',')
+  parts_len = len(parts);
+  retval    = ''
+
+  if parts_len == 2:
+    for i in range(parts_len):
+      if parts[i] != '' and parts[i].endswith('clk'):
+        retval = "end if;"
+        break
+
+  return retval
+
+snip.rv = format_class(t[1])
+`
 end process;
 endsnippet
 
@@ -166,7 +194,7 @@ end if;
 endsnippet
 
 snippet else
-else then
+else
     $0
 end if;
 endsnippet
@@ -179,20 +207,19 @@ endsnippet
 snippet ifelse
 if (${1}) then
     ${2}
-else then
+else
     $0
 end if;
 endsnippet
 
 snippet case
 case (${1}) is
+
     when ${2:0} =>
-        ${3}
-    when others =>
         $0
+
+    when others =>
+
 end case;
 endsnippet
 
-snippet "([\S]+(\-[\S]+)+)" "kebab-case to snake_case" r
-`!p snip.rv = re.sub('-','_', match.group(1))`$0
-endsnippet
