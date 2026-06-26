@@ -106,31 +106,34 @@ signal $0 : ${1:std_logic_vector} ( 0 to ${2} );
 endsnippet
 
 snippet process
-process (${1:clk, rstn})
+`!p
+def format_class(path):
+  parts     = path.split(',')
+
+  if len(parts) == 2:
+    for part in parts:
+      part = part.strip()
+
+      if part != '' and part.endswith("clk"):
+        return "seq"
+
+  return "comb"
+
+snip.rv = format_class(t[1])
+`: process (${1:clk, rstn})
 begin
     `!p
 def format_class(path):
   parts     = path.split(',')
-  parts_len = len(parts);
-  retval    = ''
 
-  if parts_len == 2:
-    for i in range(parts_len):
-      if parts[i] != '' and parts[i].endswith('clk'):
-        if i == 0:
-          tmp_idx = 1
-        else:
-          tmp_idx = 0
+  if len(parts) == 2:
+    for i in range(len(parts)):
+      part = parts[i].strip()
 
-        if parts[tmp_idx].startswith(' '):
-          tmp_val = parts[tmp_idx].lstrip()
-        else:
-          tmp_val = parts[tmp_idx]
+      if part != '' and part.endswith("clk"):
+        return "if (" + parts[ 1 if (i == 0) else 0 ].strip() + " = '0') then"
 
-        retval = "if (" + tmp_val + " = '0') then"
-        break
-
-  return retval
+  return ''
 
 snip.rv = format_class(t[1])
 `
@@ -138,41 +141,48 @@ snip.rv = format_class(t[1])
     `!p
 def format_class(path):
   parts     = path.split(',')
-  parts_len = len(parts);
-  retval    = ''
 
-  if parts_len == 2:
-    for i in range(parts_len):
-      if parts[i] != '' and parts[i].endswith('clk'):
-        if parts[i].startswith(' '):
-          tmp_val = parts[i].lstrip()
-        else:
-          tmp_val = parts[i]
+  if len(parts) == 2:
+    for part in parts:
+      part = part.strip()
 
-        retval = "elsif rising_edge (" + tmp_val + ") then\n"
-        break
+      if part != '' and part.endswith("clk"):
+        return "elsif rising_edge (" + part + ") then\n"
 
-  return retval
+  return ''
 
 snip.rv = format_class(t[1])
 `
     `!p
 def format_class(path):
   parts     = path.split(',')
-  parts_len = len(parts);
-  retval    = ''
 
-  if parts_len == 2:
-    for i in range(parts_len):
-      if parts[i] != '' and parts[i].endswith('clk'):
-        retval = "end if;"
-        break
+  if len(parts) == 2:
+    for part in parts:
+      part = part.strip()
 
-  return retval
+      if part != '' and part.endswith("clk"):
+        return "end if;"
+
+  return ''
 
 snip.rv = format_class(t[1])
 `
-end process;
+end process `!p
+def format_class(path):
+  parts     = path.split(',')
+
+  if len(parts) == 2:
+    for part in parts:
+      part = part.strip()
+
+      if part != '' and part.endswith("clk"):
+        return "seq"
+
+  return "comb"
+
+snip.rv = format_class(t[1])
+`;
 endsnippet
 
 snippet "for .. downto 0"
