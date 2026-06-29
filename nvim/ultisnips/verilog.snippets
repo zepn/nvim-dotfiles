@@ -1,5 +1,9 @@
 snippet //=
-/* $0
+// =================================== //
+//  $0
+// =================================== //
+
+/* -----------------------------------
  */
 endsnippet
 
@@ -34,59 +38,61 @@ endsnippet
 
 snippet module
 module ${1} #(
-    ${2}
 )(
-    ${3}
-);
-
+    // CLK,RST
     $0
-
+    // Inputs
+    // Outputs
+);
 endmodule
 endsnippet
 
 snippet submodule
 ${1} #(
-    ${2}
-) $1_i (
+) ${2:`!p
+def format_import_name(path):
+  return path + "_inst_0"
+
+snip.rv = format_import_name(t[1])
+`} (
     $0
 );
 endsnippet
 
 snippet interface
 interface ${1} #(
-    ${2}
 )(
-    ${3}
-);
-
+    // CLK,RST
     $0
-
+);
 endinterface
 endsnippet
 
-snippet clocking
-clocking ${1:cb} @(${2:posedge} ${3:clock}) (
-    ${4}
-);
-
+snippet package
+package ${1};
     $0
+endpackage
+endsnippet
 
+snippet clocking
+clocking ${1:cb} @(posedge ${2:clk}) (
+    $0
+);
 endclocking
 endsnippet
 
 snippet modport
 modport ${1:tb} (
+    // CLK,RST
     $0
+    // Inputs
+    // Outputs
 );
 endsnippet
 
 snippet task
-task ${1:automatic} ${2} (
-    ${3}
-);
-
+task ${1:automatic} ${2}();
     $0
-
 endtask
 endsnippet
 
@@ -120,12 +126,16 @@ snippet reg
 reg [${1}:0] $0
 endsnippet
 
+snippet logic
+logic [${1}:0] $0
+endsnippet
+
 snippet assign
 assign ${1} = ${2} ? ${3} : $0
 endsnippet
 
 snippet always
-always @(${1:posedge} ${2:clock}) begin
+always @(posedge ${1:clk}) begin
     $0
 end
 endsnippet
@@ -137,13 +147,49 @@ end
 endsnippet
 
 snippet always_ff
-always_ff @(${1:posedge} ${2:clock}) begin
+always_ff @(posedge ${1:clk}) begin
     $0
 end
 endsnippet
 
 snippet always_latch
 always_latch begin
+    $0
+end
+endsnippet
+
+snippet "for int i <= .."
+for (int ${1:i}=0; $1<=${2}; $1++) begin
+    $0
+end
+endsnippet
+
+snippet "for int i >= .."
+for (int ${1:i}=0; $1>=${2}; $1++) begin
+    $0
+end
+endsnippet
+
+snippet foreach
+foreach (${1:list}[${2:i}]) begin
+    $0
+end
+endsnippet
+
+snippet while
+while (${1:1}) begin
+    $0
+end
+endsnippet
+
+snippet repeat
+repeat (${1:1}) @(posedge ${2:clk});
+$0
+endsnippet
+
+snippet "repeat .. begin"
+repeat (${1:1}) begin
+    @(posedge ${2:clk});
     $0
 end
 endsnippet
@@ -177,20 +223,23 @@ endsnippet
 
 snippet case
 case (${1})
-    ${2:0}: ${3}
-    default: $0
+
+    ${2:0}: $0
+    default:
+
 endcase
 endsnippet
 
-snippet casebegin
+snippet "case .. begin"
 case (${1})
+
     ${2:0}: begin
-        ${3}
+        $0
     end
 
     default: begin
-        $0
     end
+
 endcase
 endsnippet
 
@@ -198,6 +247,3 @@ snippet `include
 \`include "$0.v"
 endsnippet
 
-snippet "([\S]+(\-[\S]+)+)" "kebab-case to snake_case" r
-`!p snip.rv = re.sub('-','_', match.group(1))`$0
-endsnippet
