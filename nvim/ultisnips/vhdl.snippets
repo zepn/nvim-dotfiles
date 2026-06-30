@@ -106,7 +106,7 @@ signal $0 : ${1:std_logic_vector} ( 0 to ${2} );
 endsnippet
 
 snippet process
-`!p
+${2:`!p
 def format_class(path):
   parts     = path.split(',')
 
@@ -120,7 +120,7 @@ def format_class(path):
   return "comb"
 
 snip.rv = format_class(t[1])
-`: process (${1:clk, rstn})
+`}: process (${1:clk, rstn})
 begin
     `!p
 def format_class(path):
@@ -168,21 +168,7 @@ def format_class(path):
 
 snip.rv = format_class(t[1])
 `
-end process `!p
-def format_class(path):
-  parts     = path.split(',')
-
-  if len(parts) == 2:
-    for part in parts:
-      part = part.strip()
-
-      if part != '' and part.endswith("clk"):
-        return "seq"
-
-  return "comb"
-
-snip.rv = format_class(t[1])
-`;
+end process $2;
 endsnippet
 
 snippet "for .. downto 0"
@@ -206,7 +192,6 @@ endsnippet
 snippet else
 else
     $0
-end if;
 endsnippet
 
 snippet elif
