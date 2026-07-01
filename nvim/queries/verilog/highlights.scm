@@ -15,9 +15,20 @@
   (simple_identifier) @v_module_value)
 (module_instantiation
   (simple_identifier) @v_module_value)
-(interface_instantiation 
-  (interface_identifier
+(checker_instantiation
+  (checker_identifier
     (simple_identifier) @v_module_value))
+
+(interface_identifier
+  (simple_identifier) @v_module_value)
+(type_declaration
+  (simple_identifier) @v_module_value)
+
+(net_port_header1
+  (net_port_type1
+    (simple_identifier) @v_module_value))
+(net_declaration
+  (simple_identifier) @v_module_value)
 
 
 
@@ -36,7 +47,15 @@
   "genvar"
   "signed"
   "unsigned"
+  "wait"
 ] @v_type
+
+[
+  "struct"
+  "typedef"
+  "enum"
+  "extern"
+] @c_keyword
 
 
 
@@ -52,15 +71,11 @@
   (function_identifier
     (simple_identifier) @v_function))
 
-(function_subroutine_call 
-  (subroutine_call
-    (tf_call
-      (simple_identifier) @v_function)))
+(tf_call
+  (simple_identifier) @v_function)
 
-(function_subroutine_call 
-  (subroutine_call
-    (system_tf_call
-      (system_tf_identifier) @v_function)))
+(system_tf_call
+  (system_tf_identifier) @v_function)
 
 (task_identifier
   (task_identifier
@@ -92,19 +107,18 @@
   "task"
   "endtask"
   
-  "enum"
   "pure"
   "virtual"
   "extends"
   "implements"
   "super"
   (class_item_qualifier)
+  (lifetime)
 
   "parameter"
   "localparam"
   "defparam"
   "assign"
-  "typedef"
   "modport"
   "fork"
   "join"
@@ -115,7 +129,6 @@
   "assert"
   (unique_priority)
   "tagged"
-  "extern"
   "return"
 ] @v_keyword
 
@@ -143,6 +156,7 @@
 
 [
   (include_compiler_directive)
+  (package_import_declaration)
   (default_nettype_compiler_directive)
   (timescale_compiler_directive)
 ] @v_preproc 
@@ -216,6 +230,7 @@
 [
   (time_literal)
   (primary_literal)
+  (unsigned_number)
 ] @number
 
 (comment) @comment @spell
