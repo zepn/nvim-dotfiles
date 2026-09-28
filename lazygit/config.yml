@@ -25,10 +25,10 @@ gui:
 
 keybinding:
   universal:
-    undo: '<C-Z>'
+    undo: '<ctrl+z>'
     redo: 'z'
-    submitEditorText: '<A-Enter>'
-    appendNewline: '<Enter>'
+    submitEditorText: '<alt+enter>'
+    appendNewline: '<enter>'
   files:
     commitChanges: 'C'
     commitChangesWithEditor: 'c'
