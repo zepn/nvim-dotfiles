@@ -137,7 +137,19 @@ def format_class(path):
     return ""
 
 snip.rv = format_class(t[1])
-`$0 : ${1:in}    ${2:std_logic};
+`$0 : ${1:in}`!p
+def format_class(path):
+  if path == "in":
+    return "    "
+  elif path == "out":
+    return "   "
+  elif path == "inout":
+    return " "
+  else:
+    return "    "
+
+snip.rv = format_class(t[1])
+`${2:std_logic};
 endsnippet
 
 snippet "port .. downto 0"
@@ -153,7 +165,19 @@ def format_class(path):
     return ""
 
 snip.rv = format_class(t[1])
-`$0 : ${1:in}    ${2:std_logic_vector}(${3} downto 0);
+`$0 : ${1:in}`!p
+def format_class(path):
+  if path == "in":
+    return "    "
+  elif path == "out":
+    return "   "
+  elif path == "inout":
+    return " "
+  else:
+    return "    "
+
+snip.rv = format_class(t[1])
+`${2:std_logic_vector}(${3} downto 0);
 endsnippet
 
 snippet "port 0 to .."
@@ -169,7 +193,19 @@ def format_class(path):
     return ""
 
 snip.rv = format_class(t[1])
-`$0 : ${1:in}    ${2:std_logic_vector}( 0 to ${3});
+`$0 : ${1:in}`!p
+def format_class(path):
+  if path == "in":
+    return "    "
+  elif path == "out":
+    return "   "
+  elif path == "inout":
+    return " "
+  else:
+    return "    "
+
+snip.rv = format_class(t[1])
+`${2:std_logic_vector}( 0 to ${3});
 endsnippet
 
 snippet signal
